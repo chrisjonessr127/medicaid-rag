@@ -1,0 +1,18 @@
+Medicare Supplement Insurance (Medigap) Policies Comparison Chart
+
+Core Benefit Coverage Across Standard Plans:
+- Medicare Part A coinsurance and hospital costs (up to an additional 365 days after Medicare benefits are used): Plans A, B, C, D, F, G, K, L, M, and N cover 100%.
+- Medicare Part B coinsurance or copayment: Plans A, B, C, D, F, and G cover 100%; Plan K covers 50%; Plan L covers 75%; Plan M covers 100%; Plan N covers 100% (except copayments up to $20 for office visits and up to $50 for ER visits not resulting in inpatient admission).
+- Blood (first 3 pints): Plans A, B, C, D, F, G, M, and N cover 100%; Plan K covers 50%; Plan L covers 75%.
+- Part A hospice care coinsurance or copayment: Plans A, B, C, D, F, G, M, and N cover 100%; Plan K covers 50%; Plan L covers 75%.
+- Skilled Nursing Facility (SNF) care coinsurance: Plans A and B cover 0%; Plans C, D, F, and G cover 100%; Plan K covers 50%; Plan L covers 75%; Plans M and N cover 100%.
+- Part A deductible: Plan A covers 0%; Plans B, C, D, F, G, and N cover 100%; Plans K and M cover 50%; Plan L covers 75%.
+- Part B deductible: Plans C and F cover 100%; all other plans cover 0%.
+- Part B excess charges: Plans F and G cover 100%; all other plans cover 0%.
+- Foreign travel emergency (up to plan limits): Plans C, D, F, G, M, and N cover 80%; Plans A, B, K, and L cover 0%.
+
+Operational Annotations and Equivalencies:
+- Plan J is considered the equivalent of Plan F.
+- Plan I covers Skilled Nursing Facility (SNF) coinsurance at 100%.
+- High-Deductible Plan F: Requires paying for Medicare-covered costs up to the deductible amount before coverage pays.
+- Plans K and L Out-of-Pocket Limits: After meeting annual out-of-pocket limits and Part B deductible, pays 100% for the rest of the calendar year.

@@ -1,0 +1,36 @@
+Maryland Medical Assistance Program Types and Facility Admittance Guidelines
+
+1. Long Term Care (LTC) Medicaid:
+- Institutional purposes only.
+- Eligibility is based upon countable liquid assets at the time of application.
+
+2. Qualified Medicare Beneficiary (QMB):
+- Helps cover copayments for hospital, Skilled Nursing Facility (SNF), and physician visits.
+- Pays Medicare Part B premiums and Part D.
+- Eligibility is based on income.
+- Important Rule: QMB cannot be primary insurance.
+- Billing / Submission Rule: QMB 257 submissions get sent directly to Tina, not Telligen.
+- Restriction: Cannot admit in a Skilled Nursing Facility (SNF) under standard terms.
+
+3. Community Medical Assistance (Community MA):
+- Helps cover copayments for hospital, SNF, and physician visits; pays Part B premiums and Part D.
+- Based on income (SSI recipients / income less than $350 per month).
+- Can admit for less than a 30-day stay as primary insurance, provided there is an approved level / Form 3871 from the hospital or community.
+- Covers Adult Day Care services.
+
+4. MDC / BHH / Waivers (e.g., OAH, OHM, OAA):
+- Refer to 257 section for biller guidance.
+- Can admit for stays of less than 30 days as primary insurance with an approved level / Form 3871 from the hospital or community.
+- Covers hospital, doctor, and SNF copayments.
+- Offers community-based wrap-around supports: in-home care, subsidized housing / Assisted Living Facility (ALF), and Medical Day Care.
+
+5. Specified Low-Income Medicare Beneficiary (SLMB):
+- Pays for Medicare Part B premiums and Part D only.
+- Does not cover copayments for hospital, SNF, or doctor visits.
+- If copayment assistance is required, a full LTC application is needed.
+- Requires a Short Application (Short App).
+
+6. General Admittance and Verification Rules:
+- Any medical assistance product requires a Short Application.
+- Always check if the applicant receives HUD Housing, Energy Assistance, or Food Stamps (SNAP), as certain public assistance products do not appear directly on EVS (Eligibility Verification System).
+- DRW (Discharge Review / Waiver): 30-day primary benefit transitions to Grace.

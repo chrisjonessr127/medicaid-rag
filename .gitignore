@@ -1,0 +1,14 @@
+# Environments
+venv/
+__pycache__/
+
+# Database backups and large files
+*.tar
+*.tar.gz
+*.sql
+
+# Logs
+*.log
+
+# Local Streamlit config (if you want to keep the FutureCare theme private)
+# .streamlit/

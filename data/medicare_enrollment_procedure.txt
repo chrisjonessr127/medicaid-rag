@@ -1,0 +1,16 @@
+FutureCare Health and Management - Accounts Receivable Education SOP
+Procedure: Applying for Medicare Parts A and B (Section 10.3.3)
+
+Purpose:
+- Mandatory Enrollment: Any Long-Term Care (LTC) resident over the age of 65 receiving Medicaid benefits, or any resident who has been disabled for at least 24 months and receiving Medicaid benefits, MUST apply for Medicare Part A and Part B.
+
+Step 1: Information Gathering
+- Attempt to gather application details with the competent resident present.
+- If resident is incapacitated: Have the resident face sheet and diagnosis list ready.
+- Required Demographic Data: Must obtain the resident's City and State of Birth to complete the Medicare application.
+- Forms Repository: Reference forms are stored in I/Business Office/Medicare/Applying for Medicare A & B.
+
+Step 2: Submission Channels
+- Option 1 (Local SSA Office): Call or visit the local Social Security Administration (SSA) office. Use the "Part A and B Enrollment Form Guidelines" sheet to select the correct form for the resident's circumstance.
+- Option 2 (National SSA Phone Line): Contact the main SSA Office at (800) 772-1213.
+- Option 3 (Online Portal - Primary): Apply online via www.medicare.gov. This is designated as the most convenient and common method.

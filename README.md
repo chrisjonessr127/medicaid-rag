@@ -2,11 +2,11 @@
 
 An enterprise-grade, fully local Retrieval-Augmented Generation (RAG) pipeline designed to navigate complex Long-Term Care (LTC) and Maryland Medicaid regulations. 
 
-Designed for healthcare administrative offices, this system ensures 100% data privacy by executing all vector embeddings and Large Language Model (LLM) inference on local hardware, completely air-gapped from commercial APIs like OpenAI or Anthropic.
+Designed for healthcare administrative offices, this system ensures 100% data privacy by executing all vector embeddings and Large Language Model (LLM) inference on local hardware, completely air-gapped from commercial APIs.
 
 ## 🚀 Architecture & Tech Stack
-- **Frontend:** Streamlit (Python) with custom session-state memory for conversational UI.
-- **Database:** Containerized PostgreSQL with `pgvector` extension (deployed via Podman).
+- **Frontend:** Streamlit (Python) with custom session-state memory for a conversational UI.
+- **Database:** Containerized PostgreSQL with the `pgvector` extension (deployed via Podman).
 - **AI Inference Engine:** Ollama (Llama 3.2 3B & Nomic-Embed-Text).
 - **Hardware Acceleration:** Deployed in a hybrid Windows/WSL2 environment, utilizing cross-subsystem networking to route Linux container traffic directly to the Windows host's AMD GPU via the Vulkan API.
 - **Remote Access:** Cloudflared (Cloudflare Tunnels) for secure, zero-trust mobile access without opening router ports.

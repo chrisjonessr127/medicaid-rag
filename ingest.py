@@ -1,62 +1,65 @@
-import os
-import ollama
-import psycopg
-from pgvector.psycopg import register_vector
-from datetime import datetime
+"""Validate demo files and atomically refresh the active RAG records."""
+from pathlib import Path
 
-DATA_DIR = "data"
-generation_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+from rag_core import client, connect, setting, vector_literal
 
-print("Connecting to PostgreSQL at 127.0.0.1:5432...")
-# autocommit=True is disabled so we can manually manage transactions
-conn = psycopg.connect("dbname=medicaid user=admin password=password host=127.0.0.1")
-conn.execute('CREATE EXTENSION IF NOT EXISTS vector')
-register_vector(conn)
+ROOT = Path(__file__).resolve().parent
+DOC_DIR = ROOT / "data"
+BANNER = "FICTIONAL DEMO DATA — NOT REAL POLICY"
 
-print("Creating staging table...")
-conn.execute('''
-    CREATE TABLE comar_rules_staging (
-        id bigserial PRIMARY KEY, 
-        filename text, 
-        content text, 
-        embedding vector(768),
-        generation_id text
-    )
-''')
-conn.commit()
 
-chunks = []
-print(f"Parsing documents from '{DATA_DIR}/'...")
-for filename in sorted(os.listdir(DATA_DIR)):
-    if filename.endswith(".txt"):
-        filepath = os.path.join(DATA_DIR, filename)
-        with open(filepath, 'r', encoding='utf-8') as f:
-            text = f.read()
-            paragraphs = [p.strip() for p in text.split('\n\n') if len(p.strip()) > 30]
-            for p in paragraphs:
-                chunks.append((filename, p))
+def main():
+    files = sorted(DOC_DIR.glob("demo_*.txt"))
+    if not files:
+        raise SystemExit("No demo documents. Run python generate_demo_data.py first.")
 
-if not chunks:
-    print("Error: No text files found in the data/ folder.")
-    exit(1)
+    chunks = []
+    for file in files:
+        text = file.read_text(encoding="utf-8")
+        if not text.startswith(BANNER):
+            raise SystemExit(f"Refusing non-demo document: {file.name}")
+        for paragraph in text.split("\n\n")[1:]:
+            paragraph = paragraph.strip()
+            if len(paragraph) > 30:
+                chunks.append((file.name, paragraph))
+    if not chunks:
+        raise SystemExit("No usable demonstration paragraphs.")
 
-print(f"Generating embeddings for {len(chunks)} chunks...")
-inputs = ["search_document: " + chunk[1] for chunk in chunks]
-embeddings_response = ollama.embed(model='nomic-embed-text', input=inputs)
+    # Generate and validate EVERY embedding before altering active rows.
+    vectors = []
+    ai = client()
+    for start in range(0, len(chunks), 12):
+        batch = chunks[start:start + 12]
+        result = ai.embed(
+            model=setting("EMBEDDING_MODEL", "nomic-embed-text"),
+            input=["search_document: " + content for _, content in batch],
+        )
+        if len(result.embeddings) != len(batch):
+            raise RuntimeError("Embedding service returned the wrong number of vectors")
+        vectors.extend(vector_literal(item) for item in result.embeddings)
 
-print("Writing vectors into staging table...")
-cur = conn.cursor()
-with cur.copy("COPY comar_rules_staging (filename, content, embedding, generation_id) FROM STDIN WITH (FORMAT BINARY)") as copy:
-    copy.set_types(['text', 'text', 'vector', 'text'])
-    for (filename, content), embedding in zip(chunks, embeddings_response.embeddings):
-        copy.write_row([filename, content, embedding, generation_id])
-conn.commit()
+    with connect() as connection:
+        connection.execute("CREATE EXTENSION IF NOT EXISTS vector")
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS rag_documents (
+                id bigserial PRIMARY KEY,
+                filename text NOT NULL,
+                content text NOT NULL,
+                embedding vector(768) NOT NULL,
+                indexed_at timestamptz NOT NULL DEFAULT now()
+            )
+        """)
+        with connection.transaction():
+            connection.execute("DELETE FROM rag_documents")
+            with connection.cursor() as cursor:
+                cursor.executemany(
+                    "INSERT INTO rag_documents (filename, content, embedding) "
+                    "VALUES (%s, %s, %s::vector)",
+                    [(source, content, vector) for (source, content), vector
+                     in zip(chunks, vectors)],
+                )
+    print(f"Indexed {len(chunks)} fictional passages from {len(files)} files.")
 
-print("Executing zero-downtime table swap...")
-# Defensive SQL swap ensuring active index is never dropped mid-generation
-with conn.transaction():
-    conn.execute("DROP TABLE IF EXISTS comar_rules_backup")
-    conn.execute("ALTER TABLE IF EXISTS comar_rules RENAME TO comar_rules_backup")
-    conn.execute("ALTER TABLE comar_rules_staging RENAME TO comar_rules")
 
-print(f"Ingestion successful! Generation {generation_id} is now active.")
+if __name__ == "__main__":
+    main()

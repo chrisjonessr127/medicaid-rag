@@ -1,22 +1,17 @@
-# Environments
+# No private data or secrets in Git.
+.venv/
 venv/
 __pycache__/
-
-# Database backups and large files
-*.tar
-*.tar.gz
-*.sql
-
-# Logs
-*.log
-
-# Local Streamlit config (if you want to keep the local theme private)
-# .streamlit/
-
-data/
+*.py[cod]
+.pytest_cache/
 .env
 .env.*
 !.env.example
+/data/
 secrets/
-*.pem
 *.key
+*.pem
+*.log
+*.sql
+*.tar
+*.tar.gz

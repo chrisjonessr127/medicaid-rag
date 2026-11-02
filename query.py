@@ -1,47 +1,11 @@
+"""Ask the indexed fictional demo corpus a question from the terminal."""
 import sys
-import ollama
-import psycopg
-from pgvector.psycopg import register_vector
+from rag_core import answer_question
 
-if len(sys.argv) < 2:
-    print("Usage: python query.py '<Your question here>'")
-    sys.exit(1)
-
-query = sys.argv[1]
-
-conn = psycopg.connect("dbname=medicaid user=admin password=password host=127.0.0.1", autocommit=True)
-register_vector(conn)
-
-# Embed query with Nomic search prefix
-query_embedding = ollama.embed(model='nomic-embed-text', input=f"search_query: {query}").embeddings[0]
-
-# Cosine similarity retrieval
-result = conn.execute(
-    'SELECT filename, content FROM comar_rules ORDER BY embedding <=> %s::vector LIMIT 5', 
-    (query_embedding,)
-).fetchall()
-
-if not result:
-    print("No relevant context found in database.")
-    sys.exit(0)
-
-context = ""
-for row in result:
-    context += f"--- Source File: {row[0]} ---\n{row[1]}\n\n"
-
-prompt = f"""You are a local document research assistant. 
-Answer the user's question accurately using ONLY the provided regulatory and operational context. 
-Cite the source file and any specific rules, limits, or guidelines mentioned. 
-If the answer cannot be determined from the context, state: 'The provided documentation does not contain this information.'
-
-Context:
-{context}
-
-Question: {query}
-"""
-
-print(f"Retrieving context and prompting Llama 3.2...\n")
-response = ollama.generate(model='llama3.2', prompt=prompt)
-
-print("=== EXPERT RESPONSE ===")
-print(response.response)
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        raise SystemExit("Usage: python query.py 'How long is a demo request review?'")
+    response, sources = answer_question(" ".join(sys.argv[1:]))
+    print("\n" + response + "\n")
+    if sources:
+        print("Sources:", ", ".join(sorted({name for name, _ in sources})))

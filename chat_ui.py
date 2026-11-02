@@ -1,62 +1,32 @@
+"""Local Streamlit UI. Not intended for remote/unauthenticated public access."""
 import streamlit as st
-import ollama
-import psycopg
-from pgvector.psycopg import register_vector
+from rag_core import answer_question
 
-st.set_page_config(page_title="Local RAG Assistant", page_icon="⚖️")
-st.title("Local Document Assistant")
+st.set_page_config(page_title="Local RAG Demo", page_icon="📚")
+st.title("Local RAG — Fictional Document Demo")
+st.warning("Synthetic test policies only. Not real healthcare or benefits advice. "
+           "Do not upload proprietary or personal records.")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
 for message in st.session_state.messages:
-    avatar_icon = "🧑‍💼" if message["role"] == "user" else "🩺"
-    with st.chat_message(message["role"], avatar=avatar_icon):
+    with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-if prompt := st.chat_input("Ask a question about your documents..."):
-    
-    with st.chat_message("user", avatar="🧑‍💼"):
-        st.markdown(prompt)
-    
-    st.session_state.messages.append({"role": "user", "content": prompt})
-
-    with st.chat_message("assistant", avatar="🩺"):
+question = st.chat_input("Ask about the fictional demo process...")
+if question:
+    st.session_state.messages.append({"role": "user", "content": question})
+    with st.chat_message("user"):
+        st.markdown(question)
+    with st.chat_message("assistant"):
         try:
-            conn = psycopg.connect("dbname=medicaid user=admin password=password host=127.0.0.1", autocommit=True)
-            register_vector(conn)
-            
-            with st.spinner("Searching regulations..."):
-                query_embedding = ollama.embed(model='nomic-embed-text', input=f"search_query: {prompt}").embeddings[0]
-                result = conn.execute(
-                    'SELECT filename, content FROM comar_rules ORDER BY embedding <=> %s::vector LIMIT 5', 
-                    (query_embedding,)
-                ).fetchall()
-
-            context = ""
-            if result:
-                with st.expander("View Retrieved Sources"):
-                    for row in result:
-                        st.markdown(f"**Source:** `{row[0]}`\n> {row[1]}")
-                        context += f"--- Source File: {row[0]} ---\n{row[1]}\n\n"
-            
-            system_instruction = f"""You are a local document research assistant. 
-            Answer the user's question accurately using ONLY the provided regulatory and operational context. 
-            If the answer cannot be determined from the context, state: 'The provided documentation does not contain this information.'
-            
-            Context:
-            {context}"""
-
-            messages_for_api = [{"role": "system", "content": system_instruction}] + st.session_state.messages
-
-            response_stream = ollama.chat(model='llama3.2', messages=messages_for_api, stream=True)
-            
-            def stream_parser():
-                for chunk in response_stream:
-                    yield chunk['message']['content']
-                    
-            full_response = st.write_stream(stream_parser())
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
-            
-        except Exception as e:
-            st.error(f"Database or AI Connection Error: {e}")
+            with st.spinner("Searching fictional documents locally..."):
+                result, sources = answer_question(question)
+            st.markdown(result)
+            if sources:
+                with st.expander("View retrieved fictional sources"):
+                    for name, paragraph in sources:
+                        st.markdown(f"**{name}**\n\n> {paragraph}")
+            st.session_state.messages.append({"role": "assistant", "content": result})
+        except Exception as exc:
+            st.error(f"Local AI or database error: {exc}")

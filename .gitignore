@@ -10,5 +10,13 @@ __pycache__/
 # Logs
 *.log
 
-# Local Streamlit config (if you want to keep the FutureCare theme private)
+# Local Streamlit config (if you want to keep the local theme private)
 # .streamlit/
+
+data/
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key

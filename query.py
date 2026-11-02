@@ -29,7 +29,7 @@ context = ""
 for row in result:
     context += f"--- Source File: {row[0]} ---\n{row[1]}\n\n"
 
-prompt = f"""You are a Maryland Medicaid and Long-Term Care administrative expert. 
+prompt = f"""You are a local document research assistant. 
 Answer the user's question accurately using ONLY the provided regulatory and operational context. 
 Cite the source file and any specific rules, limits, or guidelines mentioned. 
 If the answer cannot be determined from the context, state: 'The provided documentation does not contain this information.'

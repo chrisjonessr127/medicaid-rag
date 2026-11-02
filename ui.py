@@ -4,7 +4,7 @@ import psycopg
 from pgvector.psycopg import register_vector
 
 st.set_page_config(page_title="Medicaid RAG", page_icon="⚖️")
-st.title("Maryland Medicaid & LTC Assistant")
+st.title("Local Document Assistant")
 
 question = st.text_input("Ask a regulatory or operational question:")
 
@@ -34,7 +34,7 @@ if st.button("Search") and question:
                         st.markdown(f"**Source:** `{row[0]}`\n> {row[1]}")
                         context += f"--- Source File: {row[0]} ---\n{row[1]}\n\n"
                 
-                prompt = f"""You are a Maryland Medicaid and Long-Term Care administrative expert. 
+                prompt = f"""You are a local document research assistant. 
                 Answer the user's question accurately using ONLY the provided regulatory and operational context. 
                 Cite the source file and any specific rules, limits, or guidelines mentioned. 
                 If the answer cannot be determined from the context, state: 'The provided documentation does not contain this information.'

@@ -1,21 +1,27 @@
-# Local GPU-Accelerated RAG Assistant (LTC & Medicaid)
+# Local RAG Assistant
 
-An enterprise-grade, fully local Retrieval-Augmented Generation (RAG) pipeline designed to navigate complex Long-Term Care (LTC) and Maryland Medicaid regulations. 
+A self-hosted Retrieval-Augmented Generation research prototype.
 
-Designed for healthcare administrative offices, this system ensures 100% data privacy by executing all vector embeddings and Large Language Model (LLM) inference on local hardware, completely air-gapped from commercial APIs.
+## Technology
+- Ollama local inference
+- PostgreSQL with pgvector
+- Streamlit chat interface
+- Python document ingestion
+- Semantic search with source references
 
-## 🚀 Architecture & Tech Stack
-- **Frontend:** Streamlit (Python) with custom session-state memory for a conversational UI.
-- **Database:** Containerized PostgreSQL with the `pgvector` extension (deployed via Podman).
-- **AI Inference Engine:** Ollama (Llama 3.2 3B & Nomic-Embed-Text).
-- **Hardware Acceleration:** Deployed in a hybrid Windows/WSL2 environment, utilizing cross-subsystem networking to route Linux container traffic directly to the Windows host's AMD GPU via the Vulkan API.
-- **Remote Access:** Cloudflared (Cloudflare Tunnels) for secure, zero-trust mobile access without opening router ports.
+## Data
+No employer documents or proprietary datasets are distributed.
+Create a local data directory and add authorized test documents.
 
-## 💡 Key Features
-- **Automated Ingestion:** Python script chunks and embeds raw regulatory text files into the vector database.
-- **Transparent Sourcing:** The UI includes an expandable source-tracking module, allowing users to verify the exact document and paragraph the AI used to generate its answer.
-- **Contextual Memory:** Maintains chat history within the browser session for natural follow-up questions.
-- **Background Automation:** Managed via custom bash and batch scripting for silent, on-demand execution.
+## Security
+This is a development prototype, not a production-certified system.
+Review database credentials, network access and external synchronization
+before use with sensitive documents.
 
-## 🛡️ Security & Privacy
-Healthcare data requires strict compliance. By utilizing local models and a Podman-isolated database, zero Protected Health Information (PHI) or proprietary operational data ever leaves the host machine.
+## Local startup
+Run podman-compose up -d.
+Create a Python virtual environment and install the dependencies.
+Pull the Ollama models llama3.2 and nomic-embed-text.
+Ingest your local demo documents using python ingest.py.
+Start the interface using:
+streamlit run chat_ui.py --server.address 127.0.0.1

@@ -3,8 +3,8 @@ import ollama
 import psycopg
 from pgvector.psycopg import register_vector
 
-st.set_page_config(page_title="FutureCare Medicaid Assistant", page_icon="⚖️")
-st.title("LTC Medicaid & Billing Assistant")
+st.set_page_config(page_title="Local RAG Assistant", page_icon="⚖️")
+st.title("Local Document Assistant")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -14,7 +14,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"], avatar=avatar_icon):
         st.markdown(message["content"])
 
-if prompt := st.chat_input("Ask a Medicaid or facility billing question..."):
+if prompt := st.chat_input("Ask a question about your documents..."):
     
     with st.chat_message("user", avatar="🧑‍💼"):
         st.markdown(prompt)
@@ -40,7 +40,7 @@ if prompt := st.chat_input("Ask a Medicaid or facility billing question..."):
                         st.markdown(f"**Source:** `{row[0]}`\n> {row[1]}")
                         context += f"--- Source File: {row[0]} ---\n{row[1]}\n\n"
             
-            system_instruction = f"""You are a Maryland Medicaid and Long-Term Care administrative expert. 
+            system_instruction = f"""You are a local document research assistant. 
             Answer the user's question accurately using ONLY the provided regulatory and operational context. 
             If the answer cannot be determined from the context, state: 'The provided documentation does not contain this information.'
             
